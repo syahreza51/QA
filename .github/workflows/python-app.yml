@@ -3,7 +3,7 @@ name: Deploy to Ubuntu VM
 on:
   push:
     branches:
-      - master # Ganti dengan branch yang ingin Anda deploy
+      - main # Ganti dengan branch yang ingin Anda deploy
 
 jobs:
   deploy:
