@@ -1,22 +1,33 @@
-name: Deploy to Ubuntu VM
+name: Python CI/CD
 
 on:
   push:
     branches:
-      - main # Ganti dengan branch yang ingin Anda deploy
+      - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Configure SSH
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.AUTHORIZED_KEY }}" > ~/.ssh/authorized_keys
-        chmod 600 ~/.ssh/authorized_keys
-        chmod 700 ~/.ssh
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Deploy to Server
-      run: |
-        ssh -o StrictHostKeyChecking=no -p 22 root@192.168.26.42 "cd /home/project-python && git pull"
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest
+
+      - name: Deploy
+        run: |
+          if [ ${{ github.event_name }} == 'push' ]; then
+            ssh root@192.168.26.42 "cd /home/project-python && git pull origin main"
+          fi
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.CI/CD }}
