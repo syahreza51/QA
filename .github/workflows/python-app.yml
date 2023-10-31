@@ -30,4 +30,4 @@ jobs:
             ssh root@192.168.26.42 "cd /home/project-python && git pull origin main"
           fi
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.CI/CD }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
